@@ -14,10 +14,28 @@ Output can be generated as either Latex or Markdown.
 
 Released and distributed via setuptools/PyPI/pip for Python 2 and 3.
  
-Additional detail available in the article:
-http://john-hawkins.github.io/dfsummarizer-dataset-summarizer-application/
+Additional detail available in the [companion blog post](https://john-hawkins.github.io/posts/2020/07/dfsummarizer-dataframe-summarizer-application/)
+ 
+Built using the [bootstrap cmdline template](https://github.com/jgehrcke/python-cmdline-bootstrap)
+ by [jgehrcke](https://github.com/jgehrcke)
 
+
+Testing
+*******
+
+You can use this application multiple ways
+
+Use the runner:
+
+    $ ./dfsummarizer-runner.py markdown data/test.csv
+
+Invoke the directory as a package:
+
+    $ python -m dfsummarizer markdown data/test.csv
    
+Or simply install the package and use the command line application directly
+
+
 Installation
 ************
 
