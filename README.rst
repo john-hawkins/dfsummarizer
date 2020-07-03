@@ -27,7 +27,9 @@ You can use this application multiple ways
 
 Use the runner:
 
-    $ ./dfsummarizer-runner.py markdown data/test.csv
+    $ ./dfsummarizer-runner.py markdown data/test.csv > markdown_test.md
+
+Which was used to generate the markdown 'output test file <markdown_test.md>'_
 
 Invoke the directory as a package:
 

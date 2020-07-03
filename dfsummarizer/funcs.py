@@ -114,21 +114,28 @@ def get_padded_number(n):
         return "     -     "
     if (str(n).replace('.','',1).isdigit()):
         if (n<10):
-            return str(n) + "        "
+            return get_spaces(8 - after_decimal(n)) + str(n) + " "
         if (n<100):
-            return str(n) + "       "
+            return get_spaces(7 - after_decimal(n)) + str(n)+ " "
         if (n<1000):
-            return str(n) + "      "
+            return get_spaces(6 - after_decimal(n)) + str(n)+ " "
         if (n<10000):
-            return str(n) + "     "
+            return get_spaces(5 - after_decimal(n)) + str(n)+ " "
         if (n<100000):
-            return str(n) + "    "
+            return get_spaces(4 - after_decimal(n)) + str(n)+ " "
         if (n<1000000):
-            return str(n) + "   "
+            return get_spaces(3 - after_decimal(n)) + str(n)+ " "
         if (n<10000000):
-            return str(n) + "  "
+            return get_spaces(2 - after_decimal(n)) + str(n)+ " "
     else:
         return str(n) + " "
+
+def after_decimal(n):
+    arr = str(n).split(".")
+    if( len(arr)==2 ):
+        return len(arr[1])
+    else:
+        return -1
 
 def print_markdown(s):
     longest_name = max(s["Name"].apply(lambda x: len_or_null(x)))
@@ -138,9 +145,9 @@ def print_markdown(s):
         name_spacer = 6
 
     print("| Name ", get_spaces(name_spacer-6), 
-        "| Type   | Missing |  Min       |  Mean      |  Max        |", sep="")
+        "| Type   | Missing |  Min       |  Mean      |  Max       |", sep="")
     print("| ---- ", get_spaces(name_spacer-6), 
-        "| ------ | ------- |  ---       |  ----      |  ---        |", sep="")
+        "| ------ | ------- |  ---       |  ----      |  ---       |", sep="")
     for i in range(len(s)):
         print("| ", s.loc[i,"Name"], 
             get_spaces(name_spacer - len(s.loc[i,"Name"]) - 1 ), 
@@ -148,4 +155,4 @@ def print_markdown(s):
             "| ", get_percent_spacer(s.loc[i,"Nulls"]), s.loc[i,"Nulls"],"%   ", 
             "| ", get_padded_number(s.loc[i,"Min"]), 
             "| ", get_padded_number(s.loc[i,"Mean"]),
-            "| ", get_padded_number(s.loc[i,"Max"]), " |", sep="")
+            "| ", get_padded_number(s.loc[i,"Max"]), "|", sep="")
