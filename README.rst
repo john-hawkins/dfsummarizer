@@ -29,7 +29,7 @@ Use the runner:
 
     $ ./dfsummarizer-runner.py markdown data/test.csv > markdown_test.md
 
-Which was used to generate the markdown 'output test file <markdown_test.md>'_
+Which was used to generate the markdown `output test file <markdown_test.md>`_
 
 Invoke the directory as a package:
 
