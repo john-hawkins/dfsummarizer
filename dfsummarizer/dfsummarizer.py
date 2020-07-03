@@ -26,12 +26,15 @@ def main():
         summary = analyse_df(df)
         if(format=="latex"):
             print_latex(summary)
-        else: 
+        elif(format=="markdown"):
             print_markdown(summary)
+        else: 
+            print(summary)
+
 
 def print_usage(args):
     """ Command line application usage instrutions. """
     print("USAGE ")
-    print(args[0], " <FORMAT: 'latex' or 'markdown'> <PATH TO CSV>")
+    print(args[0], " <FORMAT: 'simple' or 'latex' or 'markdown'> <PATH TO CSV>")
 
 

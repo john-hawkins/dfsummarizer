@@ -69,7 +69,23 @@ def coerce_dates(df):
 
 
 def print_latex(summary):
-    print(summary)
+    print("\\begin{table}[h!]")
+    print(" \\begin{center}")
+    print("   \\caption{Data Summary Table}")
+    print("   \\label{tab:table1}")
+    print("   \\begin{tabular}{l|l|r|r|r|r} ")
+    print("    \\textbf{Col Name} & \\textbf{Type} & \\textbf{Missing \%} & \\textbf{Min} & \\textbf{Mean} & \\textbf{Max}\\\\")
+    print("      \\hline")
+    for i in range(len(summary)):
+        print("      ", summary.loc[i,"Name"], 
+              "&", summary.loc[i,"Type"], 
+              "&", summary.loc[i,"Nulls"], 
+              "&", summary.loc[i,"Min"], 
+              "&", summary.loc[i,"Mean"], 
+              "&", summary.loc[i,"Max"], "\\\\")
+    print("    \\end{tabular}")
+    print("  \\end{center}")
+    print("\\end{table}")
 
 def print_markdown(summary):
     print(summary)
