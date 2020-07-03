@@ -1,0 +1,7 @@
+id,opening,state,balance,duration,comments
+S001,2019-01-01,NSW,230.40,24,Simple transactions
+S002,2019-03-13,QLD,4230.90,12,Temporary savings account
+S003,2019-06-09,,900.00,24,Combined savings account
+S004,2019-05-21,VIC,500.00,24,Holdings 
+S005,2019-07-12,NSW,200.00,,Customer called to make a complaint
+S006,2019-03-25,VIC,500.00,,Unknown origin 
