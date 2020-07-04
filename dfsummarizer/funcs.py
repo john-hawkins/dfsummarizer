@@ -2,6 +2,7 @@
 
 import pandas as pd 
 import numpy as np
+import math
  
 """dfsummarizer.funcs: functions within the dfsummarizer package."""
 
@@ -15,6 +16,11 @@ def analyse_df(df):
     for name in colnames:
         nacount = len(df[df[name].isna()])
         napercent = round(100*nacount/records,1)
+        uniques = df[name].unique().tolist()
+        if np.nan in uniques :
+            uniques.remove(np.nan)
+        unicount = len(uniques)
+        unipercent = round(100*unicount/records,1)
         valtype = "Char"
         thetype = str(type(df.loc[1,name]))
         if thetype == "<class 'numpy.float64'>" :
@@ -25,11 +31,29 @@ def analyse_df(df):
            valtype = "Date"
         if thetype == "<class 'pandas._libs.tslibs.timestamps.Timestamp'>" :
            valtype = "Date"
+        # Infer Booleans by 2 unique values and additional criteria
+        if unicount == 2:
+           if (valtype == "Char") :
+               temp = [x.lower() for x in uniques]
+               temp.sort()
+               if (temp == ['no', 'yes']):
+                   valtype = "Bool"
+               if (temp == ['n', 'y']):
+                   valtype = "Bool"
+               if (temp == ['false', 'true']):
+                   valtype = "Bool"
+               if (temp == ['f', 't']):
+                   valtype = "Bool"
         if (valtype == "Char") :
             lenvec = df[name].apply(lambda x: len_or_null(x))
-            themin = "-"
-            themean = "-"
-            themax = "-"
+            themin = round(lenvec.min(),3) # "-"
+            themean = round(lenvec.mean(),3) #"-"
+            themax = round(lenvec.max(),3) #"-"
+        elif (valtype == "Bool") :
+            newvec = df[name].apply(lambda x: booleanize(x))
+            themin = round(newvec.min(),3)
+            themean = round(newvec.mean(),3)
+            themax = round(newvec.max(),3)
         else:
             if (valtype != "Date") :
                 themin = round(df[name].min(),3)
@@ -58,6 +82,19 @@ def len_or_null(val):
         return len(val)
     except:
         return np.nan
+
+def isNaN(num):
+    return num != num
+
+def booleanize(x):
+    if isNaN(x) :
+        return x
+    else :
+        x = x.lower()
+    if x == "yes" or x == "y" or x == "true" or x == "t" or x == 1:
+        return 1
+    else :
+        return 0
 
 def coerce_dates(df):
     return df.apply(
@@ -94,7 +131,7 @@ def get_spaces(spacer):
     return rez
 
 def get_type_spacer(t):
-    if (t == "int") :
+    if (t == "Int") :
         return "    "
     if (t == "Char") :
         return "   "
@@ -102,7 +139,8 @@ def get_type_spacer(t):
         return "   "
     if (t == "Float") :
         return "  "
- 
+    return "   "
+
 def get_percent_spacer(p):
     if (p<10): 
         return " " 
@@ -112,21 +150,25 @@ def get_percent_spacer(p):
 def get_padded_number(n):
     if (n == "-"):
         return "     -     "
-    if (str(n).replace('.','',1).isdigit()):
-        if (n<10):
-            return get_spaces(8 - after_decimal(n)) + str(n) + " "
-        if (n<100):
-            return get_spaces(7 - after_decimal(n)) + str(n)+ " "
-        if (n<1000):
-            return get_spaces(6 - after_decimal(n)) + str(n)+ " "
-        if (n<10000):
-            return get_spaces(5 - after_decimal(n)) + str(n)+ " "
-        if (n<100000):
-            return get_spaces(4 - after_decimal(n)) + str(n)+ " "
-        if (n<1000000):
-            return get_spaces(3 - after_decimal(n)) + str(n)+ " "
-        if (n<10000000):
-            return get_spaces(2 - after_decimal(n)) + str(n)+ " "
+    if (str(n).replace('.','',1).replace('-','',1).isdigit()):
+        if (n<0):
+            adjus = -1
+        else:
+            adjus = 0
+        if (abs(n)<10):
+            return get_spaces(8 - after_decimal(n) + adjus) + str(n) + " "
+        if (abs(n)<100):
+            return get_spaces(7 - after_decimal(n) + adjus) + str(n)+ " "
+        if (abs(n)<1000):
+            return get_spaces(6 - after_decimal(n) + adjus) + str(n)+ " "
+        if (abs(n)<10000):
+            return get_spaces(5 - after_decimal(n) + adjus) + str(n)+ " "
+        if (abs(n)<100000):
+            return get_spaces(4 - after_decimal(n) + adjus) + str(n)+ " "
+        if (abs(n)<1000000):
+            return get_spaces(3 - after_decimal(n) + adjus) + str(n)+ " "
+        if (abs(n)<10000000):
+            return get_spaces(2 - after_decimal(n) + adjus) + str(n)+ " "
     else:
         return str(n) + " "
 
