@@ -1,4 +1,4 @@
-| Name     | Type   | Unique  | Missing |  Min       |  Mean      |  Max       |
+| Name     | Type   | Unique  | Nulls   |  Min       |  Mean      |  Max       |
 | ----     | ------ | ------- | ------- |  ---       |  ----      |  ---       |
 | id       | Char   |  100.0% |    0.0% |          4 |        4.0 |          4 |
 | opening  | Date   |  100.0% |    0.0% | 2019-01-01 | 2019-04-18 | 2019-07-12 |

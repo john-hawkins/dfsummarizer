@@ -112,7 +112,7 @@ def print_latex(summary):
     print("   \\caption{Data Summary Table}")
     print("   \\label{tab:table1}")
     print("   \\begin{tabular}{l|l|r|r|r|r} ")
-    print("    \\textbf{Name} & \\textbf{Type} & \\textbf{Unique \%} & \\textbf{Missing \%} & \\textbf{Min} & \\textbf{Mean} & \\textbf{Max}\\\\")
+    print("    \\textbf{Name} & \\textbf{Type} & \\textbf{Unique \%} & \\textbf{Nulls \%} & \\textbf{Min} & \\textbf{Mean} & \\textbf{Max}\\\\")
     print("      \\hline")
     for i in range(len(summary)):
         print("      ", summary.loc[i,"Name"], 
@@ -191,7 +191,7 @@ def print_markdown(s):
         name_spacer = 6
 
     print("| Name ", get_spaces(name_spacer-6), 
-        "| Type   | Unique  | Missing |  Min       |  Mean      |  Max       |", sep="")
+        "| Type   | Unique  | Nulls   |  Min       |  Mean      |  Max       |", sep="")
     print("| ---- ", get_spaces(name_spacer-6), 
         "| ------ | ------- | ------- |  ---       |  ----      |  ---       |", sep="")
     for i in range(len(s)):
