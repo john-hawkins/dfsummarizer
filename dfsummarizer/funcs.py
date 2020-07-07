@@ -4,7 +4,11 @@ import pandas as pd
 import numpy as np
 import math
  
-"""dfsummarizer.funcs: functions within the dfsummarizer package."""
+"""
+    dfsummarizer.funcs: Core functions of the dfsummarizer package.
+        analyse_df( pandas_dataframe): return a sumamry dataframe of the input dataframe
+        analyse_df_in_chunks(path_to_dataset): Read the dataset in chunks and provide a summary
+"""
 
 
 def analyse_df(df):
@@ -77,16 +81,32 @@ def analyse_df(df):
 
     return rez
 
+########################################################################################
+def analyse_df_in_chunks(dataset):
+    """
+        Given a path to a large dataset we will iteratively load it in chunks and build
+        out the statistics necessary to summarise the whole dataset.
+    """
+    df = pd.read_csv(dataset, low_memory=False)
+    summary = analyse_df(df)
+    return summary
+
+########################################################################################
 def len_or_null(val):
-    """ Alternative len function that will simply return numpy.NA for invalid values """
+    """ 
+       Alternative len function that will simply return numpy.NA for invalid values 
+       This is need to get sensible results when running len over a column that may contain nulls
+    """
     try:
         return len(val)
     except:
         return np.nan
 
+########################################################################################
 def isNaN(num):
     return num != num
 
+########################################################################################
 def booleanize(x):
     if isNaN(x) :
         return x
@@ -97,6 +117,7 @@ def booleanize(x):
     else :
         return 0
 
+########################################################################################
 def coerce_dates(df):
     return df.apply(
         lambda col: pd.to_datetime(col, errors='ignore')
@@ -106,6 +127,7 @@ def coerce_dates(df):
     )
 
 
+########################################################################################
 def print_latex(summary):
     print("\\begin{table}[h!]")
     print(" \\begin{center}")
@@ -126,12 +148,14 @@ def print_latex(summary):
     print("  \\end{center}")
     print("\\end{table}")
 
+########################################################################################
 def get_spaces(spacer):
     rez = ""
     for i in range(spacer):
         rez = rez + " "
     return rez
 
+########################################################################################
 def get_type_spacer(t):
     if (t == "Int") :
         return "    "
@@ -143,6 +167,7 @@ def get_type_spacer(t):
         return "  "
     return "   "
 
+########################################################################################
 def get_percent_spacer(p):
     if (p==100.0):
        return " "
@@ -151,6 +176,7 @@ def get_percent_spacer(p):
     else: 
         return "   "
 
+########################################################################################
 def get_padded_number(n):
     if (n == "-"):
         return "     -     "
@@ -176,6 +202,7 @@ def get_padded_number(n):
     else:
         return str(n) + " "
 
+########################################################################################
 def after_decimal(n):
     arr = str(n).split(".")
     if( len(arr)==2 ):
@@ -183,6 +210,7 @@ def after_decimal(n):
     else:
         return -1
 
+########################################################################################
 def print_markdown(s):
     longest_name = max(s["Name"].apply(lambda x: len_or_null(x)))
     if(longest_name>4):

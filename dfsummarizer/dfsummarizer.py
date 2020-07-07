@@ -3,15 +3,17 @@
 """dfsummarizer.dfsummarizer: provides entry point main()."""
  
 __version__ = "0.1.0"
-  
+
 import numpy as np
 import pandas as pd
 import sys
+import os
 
 from .funcs import analyse_df
+from .funcs import analyse_df_in_chunks
 from .funcs import print_latex
 from .funcs import print_markdown
- 
+from .config import max_filesize
  
 def main():
     if len(sys.argv) < 2:
@@ -22,8 +24,15 @@ def main():
         format = sys.argv[1]
         dataset = sys.argv[2]
 
-        df = pd.read_csv(dataset)
-        summary = analyse_df(df)
+        filesize = os.stat(dataset).st_size
+
+        if filesize<max_filesize:
+            df = pd.read_csv(dataset, low_memory=False)
+            summary = analyse_df(df)
+        else:
+            print("Filesize:", filesize)
+            summary = analyse_df_in_chunks(dataset)
+
         if(format=="latex"):
             print_latex(summary)
         elif(format=="markdown"):
