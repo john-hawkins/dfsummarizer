@@ -20,6 +20,22 @@ Built using the [bootstrap cmdline template](https://github.com/jgehrcke/python-
  by [jgehrcke](https://github.com/jgehrcke)
 
 
+Notes
+*****
+
+Initial implementation can handle larger files by chunking data and iteratively
+building statistics. The estimation of unique values is currently very poor. In
+the next round we will add Flajolet Martin to estimate uniques.
+
+See
+
+https://github.com/javiajinkal/Flajolet-Martin
+
+OR
+
+https://www.cs.cmu.edu/~gibbons/Phillip%20B.%20Gibbons_files/Distinct-Values-Estimation-over-Data-Streams-PBGibbons.pdf
+
+
 Testing
 *******
 

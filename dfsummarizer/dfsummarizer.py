@@ -27,10 +27,15 @@ def main():
         filesize = os.stat(dataset).st_size
 
         if filesize<max_filesize:
-            df = pd.read_csv(dataset, low_memory=False)
+            """ 
+                Using encoding='latin1' Appears to permit loading of the largest variety of files.
+                Representation of string may not be perfect, but is not important for generating a
+                summarization of the entire dataset.
+            """
+            df = pd.read_csv(dataset, encoding='latin1', low_memory=False)
             summary = analyse_df(df)
         else:
-            print("Filesize:", filesize)
+            #print("Filesize:", filesize)
             summary = analyse_df_in_chunks(dataset)
 
         if(format=="latex"):
