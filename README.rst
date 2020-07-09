@@ -14,10 +14,11 @@ Output can be generated as either Latex or Markdown.
 
 Released and distributed via setuptools/PyPI/pip for Python 2 and 3.
  
-Additional detail available in the [companion blog post](https://john-hawkins.github.io/posts/2020/07/dfsummarizer-dataframe-summarizer-application/)
- 
-Built using the [bootstrap cmdline template](https://github.com/jgehrcke/python-cmdline-bootstrap)
- by [jgehrcke](https://github.com/jgehrcke)
+Additional detail available in the `companion blog post <https://john-hawkins.github.io/posts/2020/07/dfsummarizer-dataframe-summarizer-application/>`_ 
+
+Built using the 
+`bootstrap cmdline template <https://github.com/jgehrcke/python-cmdline-bootstrap>`_
+ by `jgehrcke <https://github.com/jgehrcke>`_
 
 
 Notes
