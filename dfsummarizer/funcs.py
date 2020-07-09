@@ -6,6 +6,7 @@ import math
 import os
 
 from .config import max_filesize
+from .FlajoletMartin import FMEstimator
  
 """
     dfsummarizer.funcs: Core functions of the dfsummarizer package.
@@ -95,8 +96,13 @@ def generate_final_summary(temp, total_chunks):
     for name in temp.keys():
         col = temp[name]
         total = col['nulls'] + col['nonnulls']
-        uniprop = col['uniques']/total_chunks
-        unipercent = round(100*uniprop,1)
+        unicount = col['uniques'].estimate()
+        if unicount > total:
+            uniprop = 1.0
+        else:
+            uniprop = unicount / total
+        #uniprop = col['uniques']/total_chunks
+        unipercent = round(100 * uniprop, 1)
         napercent = round((100 * col['nulls']) / total, 1)
         themean = col['sum'] / total
         values_to_add = {
@@ -122,7 +128,7 @@ def update_temp_summary(temp, df, startpoint):
         else: 
             rez = { "type":[], "sum":0, 
                     "min":np.nan, "max":np.nan, 
-                    "uniques":0, "nulls":0, 
+                    "uniques":FMEstimator(), "nulls":0, 
                     "nonnulls":0
                    }
         nacount = len(df[df[name].isna()])
@@ -160,7 +166,8 @@ def update_temp_summary(temp, df, startpoint):
             rez['min'] = themin
         if isNaN( rez['max'] ) or themax > rez['max']:
             rez['max'] = themax
-        rez['uniques'] += uniprop
+        rez['uniques'].update_all(uniques)
+        #rez['uniques'] += uniprop
         rez['nonnulls'] = rez['nonnulls'] + nonnulls
         temp[name] = rez
     return temp
