@@ -25,16 +25,11 @@ Notes
 *****
 
 Initial implementation can handle larger files by chunking data and iteratively
-building statistics. The estimation of unique values is currently very poor. In
-the next round we will add Flajolet Martin to estimate uniques.
+building statistics. All statistics are robust except for estimation of the proportion
+of unique values. We have used a simple implementation of the Flajolet Martin algorithm
+based on the implemnetation by `Javia Jinkal <https://github.com/javiajinkal/Flajolet-Martin>`_
 
-See
-
-https://github.com/javiajinkal/Flajolet-Martin
-
-OR
-
-https://www.cs.cmu.edu/~gibbons/Phillip%20B.%20Gibbons_files/Distinct-Values-Estimation-over-Data-Streams-PBGibbons.pdf
+This `review article by Phillip Gibbons <https://www.cs.cmu.edu/~gibbons/Phillip%20B.%20Gibbons_files/Distinct-Values-Estimation-over-Data-Streams-PBGibbons.pdf>`_ gives a great overview of the alternatives.
 
 
 Testing
