@@ -17,6 +17,9 @@ with open("README.rst", "rb") as f:
 setup(
     name = "dfsummarizer",
     packages = ["dfsummarizer"],
+    install_requires=[
+        'pandas','numpy'
+    ],
     entry_points = {
         "console_scripts": ['dfsummarizer = dfsummarizer.dfsummarizer:main']
         },

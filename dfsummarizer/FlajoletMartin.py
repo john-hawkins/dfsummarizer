@@ -1,10 +1,8 @@
-from bitarray import bitarray
-import statistics
 import math
 
 def trailing_zeros(n):
-	s = str(n)
-	return len(s)-len(s.rstrip('0'))
+    s = str(n)
+    return len(s)-len(s.rstrip('0'))
 
 def get_prefix(seed):
     return 'X' * seed
