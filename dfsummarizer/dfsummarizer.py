@@ -9,6 +9,7 @@ import pandas as pd
 import sys
 import os
 
+from .funcs import load_complete_dataframe
 from .funcs import analyse_df
 from .funcs import analyse_df_in_chunks
 from .funcs import print_latex
@@ -27,15 +28,9 @@ def main():
         filesize = os.stat(dataset).st_size
 
         if filesize<max_filesize:
-            """ 
-                Using encoding='latin1' Appears to permit loading of the largest variety of files.
-                Representation of string may not be perfect, but is not important for generating a
-                summarization of the entire dataset.
-            """
-            df = pd.read_csv(dataset, encoding='latin1', low_memory=False)
+            df = load_complete_dataframe(dataset)
             summary = analyse_df(df)
         else:
-            #print("Filesize:", filesize)
             summary = analyse_df_in_chunks(dataset)
 
         if(format=="latex"):
@@ -49,6 +44,8 @@ def main():
 def print_usage(args):
     """ Command line application usage instrutions. """
     print("USAGE ")
-    print(args[0], " <FORMAT: 'simple' or 'latex' or 'markdown'> <PATH TO CSV>")
+    print(args[0], " <FORMAT: 'simple' or 'latex' or 'markdown'> <PATH TO DATASET>")
+    print("  <PATH TO DATASET> - Supported file types: csv, tsv, xls, xlsx, odf")
+    print("")
 
 

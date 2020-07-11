@@ -173,6 +173,32 @@ def update_temp_summary(temp, df, startpoint):
     return temp
 
 ########################################################################################
+def extract_file_extension(path_to_file):
+    return os.path.splitext(path_to_file)[1]
+
+########################################################################################
+def load_complete_dataframe(path_to_file):
+    """
+        We load the entire dataset into memory, using the file extension to determine
+        the expected format. We are using encoding='latin1' because it ppears to 
+        permit loading of the largest variety of files.
+        Representation of strings may not be perfect, but is not important for generating a
+        summarization of the entire dataset.
+    """
+    extension = extract_file_extension(path_to_file).lower()
+    if extension == ".csv":
+        df = pd.read_csv(path_to_file, encoding='latin1', low_memory=False)
+        return df
+    if extension == ".tsv":
+        df = pd.read_csv(path_to_file, encoding='latin1', sep='\t', low_memory=False)
+        return df
+    if extension == ".xls" or extension == ".xlsx" or extension == ".odf" :
+        df = pd.read_excel(path_to_file)
+        return df
+
+    raise ValueError("Unsupported File Type")
+
+########################################################################################
 def infer_type(thetype, unicount, uniques):
      valtype = "Char"
      if thetype == "<class 'numpy.float64'>" :
