@@ -11,7 +11,7 @@ version = re.search(
         re.M
     ).group(1)
  
-with open("README.rst", "rb") as f:
+with open("README.md", "rb") as f:
     long_descr = f.read().decode("utf-8")
 
 setup(
@@ -26,6 +26,7 @@ setup(
     version = version,
     description = "Python command line application to summarize a CSV or TSV dataset.",
     long_description = long_descr,
+    long_description_content_type='text/markdown',
     author = "John Hawkins",
     author_email = "hawkins.john.c@gmail.com",
     url = "http://john-hawkins.github.io",

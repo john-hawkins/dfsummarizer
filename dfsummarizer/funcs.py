@@ -34,8 +34,9 @@ def analyse_df(df):
             uniques.remove(np.nan)
         unicount = len(uniques)
         unipercent = round(100*unicount/records,1)
-
-        valtype = infer_type(str(type(df.loc[1,name])), unicount, uniques)
+ 
+        #valtype = infer_type(str(type(df.loc[1,name])), unicount, uniques)
+        valtype = infer_type_2( df.loc[:,name], 0, unicount, uniques)
 
         if (valtype == "Char") :
             lenvec = df[name].apply(lambda x: len_or_null(x))
@@ -101,10 +102,12 @@ def generate_final_summary(temp, total_chunks):
             uniprop = 1.0
         else:
             uniprop = unicount / total
-        #uniprop = col['uniques']/total_chunks
         unipercent = round(100 * uniprop, 1)
         napercent = round((100 * col['nulls']) / total, 1)
-        themean = col['sum'] / total
+        if (col['type'] != "Date") :
+            themean = col['sum'] / total
+        else:
+            themean = col['mean'] 
         values_to_add = {
             'Name':name, 
             'Type': col['type'],
@@ -126,7 +129,7 @@ def update_temp_summary(temp, df, startpoint):
         if name in temp:
             rez = temp[name]
         else: 
-            rez = { "type":[], "sum":0, 
+            rez = { "type":[], "sum":0, "mean":np.nan, 
                     "min":np.nan, "max":np.nan, 
                     "uniques":FMEstimator(), "nulls":0, 
                     "nonnulls":0
@@ -138,7 +141,7 @@ def update_temp_summary(temp, df, startpoint):
             uniques.remove(np.nan)
         unicount = len(uniques)
         uniprop = unicount / len(df)
-        valtype = infer_type(str(type(df.loc[startpoint,name])), unicount, uniques)
+        valtype = infer_type_2( df.loc[:,name], startpoint, unicount, uniques)
         if (valtype == "Char") :
             lenvec = df[name].apply(lambda x: len_or_null(x))
             themin = round(lenvec.min(),3) # "-"
@@ -156,11 +159,18 @@ def update_temp_summary(temp, df, startpoint):
                 themax = round(df[name].max(),3)
             else :
                 themin = str(df[name].min())[0:10]
-                thesum = str(df[name].sum())
+                themean = df[name].mean()
                 themax = str(df[name].max())[0:10] 
 
         rez['type'] = valtype
-        rez['sum'] = rez['sum'] + thesum
+        if (valtype != "Date") :
+            rez['sum'] = rez['sum'] + thesum
+        else:
+            if isNaN(rez['mean']):
+                rez['mean'] = themean
+        #    else:
+        #        rez['mean'] = rez['mean'] + (rez['mean'] - themean)/2
+        # ABOVE IS OFF FOR THE MOMENT - i.e Keep the first mean
         rez['nulls'] = rez['nulls'] + nacount
         if isNaN( rez['min'] ) or themin < rez['min']:
             rez['min'] = themin
@@ -199,6 +209,30 @@ def load_complete_dataframe(path_to_file):
     raise ValueError("Unsupported File Type")
 
 ########################################################################################
+def infer_type_2( thecolumn, startpoint, unicount, uniques):
+    thetype = get_first_non_null_type(thecolumn, startpoint)
+    return infer_type(thetype, unicount, uniques)
+
+
+########################################################################################
+def get_first_non_null_type(thecolumn, startpoint):
+    thetype = ""
+    index = startpoint
+    while thetype == "":
+        temptype = str(type(thecolumn[index]))
+        tempval = thecolumn[index]
+        if tempval == np.nan:
+            thetype = ""
+        elif tempval is None:
+            thetype = ""
+        elif temptype == "<class 'pandas._libs.tslibs.nattype.NaTType'>":
+            thetype = ""
+        else:
+            thetype = temptype
+        index = index + 1 
+    return thetype
+
+########################################################################################
 def infer_type(thetype, unicount, uniques):
      valtype = "Char"
      if thetype == "<class 'numpy.float64'>" :
@@ -210,9 +244,10 @@ def infer_type(thetype, unicount, uniques):
      if thetype == "<class 'pandas._libs.tslibs.timestamps.Timestamp'>" :
         valtype = "Date"
      # Infer Booleans by 2 unique values and additional criteria
+     #print("Type: ", thetype)
      if unicount == 2:
         if (valtype == "Char") :
-            temp = [x.lower() for x in uniques]
+            temp = [x.lower() for x in uniques if x is not None]
             temp.sort()
             if (temp == ['no', 'yes']):
                 valtype = "Bool"
@@ -251,6 +286,8 @@ def isNaN(num):
 ########################################################################################
 def booleanize(x):
     if isNaN(x) :
+        return x
+    elif x is None :
         return x
     else :
         x = x.lower()
