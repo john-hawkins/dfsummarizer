@@ -32,7 +32,7 @@ based on the implementation by [Javia Jinkal](https://github.com/javiajinkal/Fla
 This [review article by Phillip Gibbons](https://www.cs.cmu.edu/~gibbons/Phillip%20B.%20Gibbons_files/Distinct-Values-Estimation-over-Data-Streams-PBGibbons.pdf) gives a great overview of the alternatives.
 
 
-## Testing
+## Usage
 
 You can use this application multiple ways
 
@@ -55,11 +55,18 @@ Or simply install the package and use the command line application directly
 
 # Installation
 
-Installation from the source tree (or via pip from PyPI)::
+Installation from the source tree:
 
 ```
 python setup.py install
 ```
+
+(or via pip from PyPI):
+
+```
+pip install dfsummarizer
+```
+
 
 Now, the ``dfsummarizer`` command is available::
 

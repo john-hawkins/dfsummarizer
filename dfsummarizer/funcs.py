@@ -243,10 +243,15 @@ def infer_type(thetype, unicount, uniques):
         valtype = "Date"
      if thetype == "<class 'pandas._libs.tslibs.timestamps.Timestamp'>" :
         valtype = "Date"
-     # Infer Booleans by 2 unique values and additional criteria
-     #print("Type: ", thetype)
-     if unicount == 2:
-        if (valtype == "Char") :
+     if thetype == "<class 'numpy.bool_'>":
+        valtype = "Bool"
+     if thetype == "<class 'bool'>":
+        valtype = "Bool"
+
+     # Additional Inference of Booleans by strings with 2 unique values 
+     # and common names as additional criteria
+     if (valtype == "Char") :
+         if unicount == 2:
             temp = [x.lower() for x in uniques if x is not None]
             temp.sort()
             if (temp == ['no', 'yes']):
@@ -289,8 +294,11 @@ def booleanize(x):
         return x
     elif x is None :
         return x
+    elif str(type(x)) == "<class 'bool'>": 
+        return x
     else :
         x = x.lower()
+
     if x == "yes" or x == "y" or x == "true" or x == "t" or x == 1:
         return 1
     else :

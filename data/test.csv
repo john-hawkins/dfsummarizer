@@ -1,7 +1,7 @@
-id,opening,first,state,balance,duration,years,flag,comments
-S001,2019-01-01,YES,NSW,230.40,24,2,,Simple transactions
-S002,2019-03-13,NO,QLD,4230.90,12,3,1,Temporary savings account
-S003,2019-06-09,YES,,900.00,24,4,,Combined savings account
-S004,2019-05-21,NO,VIC,500.00,24,4,,Holdings 
-S005,2019-07-12,NO,NSW,200.00,,2,1,Customer called to make a complaint
-S006,2019-03-25,,VIC,500.00,,3,,Unknown origin 
+id,opening,first,last,state,balance,duration,years,flag,comments
+S001,2019-01-01,YES,FALSE,NSW,230.40,24,2,,Simple transactions
+S002,2019-03-13,NO,,QLD,4230.90,12,3,1,Temporary savings account
+S003,2019-06-09,YES,FALSE,,900.00,24,4,,Combined savings account
+S004,2019-05-21,NO,,VIC,500.00,24,4,,Holdings 
+S005,2019-07-12,NO,TRUE,NSW,200.00,,2,1,Customer called to make a complaint
+S006,2019-03-25,,,VIC,500.00,,3,,Unknown origin 

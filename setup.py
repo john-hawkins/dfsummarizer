@@ -14,6 +14,11 @@ version = re.search(
 with open("README.md", "rb") as f:
     long_descr = f.read().decode("utf-8")
 
+with open("markdown_test.md", "rb") as f:
+    example = f.read().decode("utf-8")
+
+long_descr = long_descr + "\n" + example
+
 setup(
     name = "dfsummarizer",
     packages = ["dfsummarizer"],
