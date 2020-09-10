@@ -22,6 +22,7 @@ long_descr = long_descr + "\n" + example
 setup(
     name = "dfsummarizer",
     packages = ["dfsummarizer"],
+    license = "MIT",
     install_requires=[
         'pandas','numpy'
     ],
