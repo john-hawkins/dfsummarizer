@@ -23,7 +23,7 @@ setup(
     name = "dfsummarizer",
     packages = ["dfsummarizer"],
     license = "MIT",
-    install_requires = ['pandas>=0.25.3', 'numpy>=1.16.4']
+    install_requires = ['pandas>=0.25.3', 'numpy>=1.16.4'],
     entry_points = {
         "console_scripts": ['dfsummarizer = dfsummarizer.dfsummarizer:main']
     },
