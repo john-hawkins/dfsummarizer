@@ -1,10 +1,10 @@
 dfsummarizer  
+=====================================================
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![build](https://github.com/john-hawkins/dfsummarizer/workflows/build/badge.svg)
 [![PyPI](https://img.shields.io/pypi/v/dfsummarizer.svg)](https://pypi.org/project/dfsummarizer)
 
-=====================================================
 
 This is an application to summarize the variables in a data frame.
 It will accept a CSV, TSV or XLS file and produce a table summarizing 
