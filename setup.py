@@ -26,7 +26,7 @@ setup(
     install_requires = ['pandas>=0.25.3', 'numpy>=1.16.4']
     entry_points = {
         "console_scripts": ['dfsummarizer = dfsummarizer.dfsummarizer:main']
-        },
+    },
     version = version,
     description = "Python command line application to summarize a CSV or TSV dataset.",
     long_description = long_descr,
