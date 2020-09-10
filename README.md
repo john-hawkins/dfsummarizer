@@ -1,5 +1,5 @@
-dfsummarizer
-============
+dfsummarizer  ![build](https://github.com/john-hawkins/dfsummarizer/workflows/build/badge.svg)
+=====================================================
 
 This is an application to summarize the variables in a data frame.
 It will accept a CSV, TSV or XLS file and produce a table summarizing 
