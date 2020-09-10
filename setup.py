@@ -35,9 +35,9 @@ setup(
     author_email = "hawkins.john.c@gmail.com",
     url = "http://john-hawkins.github.io",
     project_urls = {
-        'Documentation': 'http://john-hawkins.github.io",
-        'Source': 'https://github.com/john-hawkins/dfsummarizer'
-        'Tracker': 'https://github.com/john-hawkins/dfsummarizer/issues' 
+        'Documentation': "http://john-hawkins.github.io",
+        'Source': "https://github.com/john-hawkins/dfsummarizer",
+        'Tracker': "https://github.com/john-hawkins/dfsummarizer/issues" 
       }
     )
 
