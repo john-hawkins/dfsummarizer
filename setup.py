@@ -27,6 +27,7 @@ setup(
     entry_points = {
         "console_scripts": ['dfsummarizer = dfsummarizer.dfsummarizer:main']
     },
+    include_package_data=True,
     version = version,
     description = "Python command line application to summarize a CSV or TSV dataset.",
     long_description = long_descr,
