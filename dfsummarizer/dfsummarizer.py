@@ -2,7 +2,7 @@
  
 """dfsummarizer.dfsummarizer: provides entry point main()."""
  
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 
 import numpy as np
 import pandas as pd
