@@ -24,7 +24,7 @@ def analyse_df(df):
     colnames = df.columns
     records = len(df)
     df = coerce_dates(df)
-    rez = pd.DataFrame(columns=('Name', 'Type', 'Unique', 'Nulls', 'Min', 'Mean', 'Max'))
+    rez = pd.DataFrame(columns=('Name', 'Type', 'Unique Vals', 'Unique', 'Nulls', 'Min', 'Mean', 'Max'))
 
     for name in colnames:
         nacount = len(df[df[name].isna()])
@@ -61,6 +61,7 @@ def analyse_df(df):
         values_to_add = {
             'Name':name, 
             'Type':valtype,
+            'Unique Vals':unicount, 
             'Unique':unipercent, 
             'Nulls':napercent, 
             'Min':themin, 
@@ -93,13 +94,14 @@ def analyse_df_in_chunks(path_to_file):
 
 ########################################################################################
 def generate_final_summary(temp, total_chunks):
-    rez = pd.DataFrame(columns=('Name', 'Type', 'Unique', 'Nulls', 'Min', 'Mean', 'Max'))
+    rez = pd.DataFrame(columns=('Name', 'Type', 'Unique Vals', 'Unique', 'Nulls', 'Min', 'Mean', 'Max'))
     for name in temp.keys():
         col = temp[name]
         total = col['nulls'] + col['nonnulls']
         unicount = col['uniques'].estimate()
         if unicount > total:
             uniprop = 1.0
+            unicount = total
         else:
             uniprop = unicount / total
         unipercent = round(100 * uniprop, 1)
@@ -111,6 +113,7 @@ def generate_final_summary(temp, total_chunks):
         values_to_add = {
             'Name':name, 
             'Type': col['type'],
+            'Unique Vals':unicount,
             'Unique':unipercent,
             'Nulls':napercent,
             'Min': col['min'],
@@ -321,12 +324,12 @@ def print_latex(summary):
     print("   \\caption{Data Summary Table}")
     print("   \\label{tab:table1}")
     print("   \\begin{tabular}{l|l|r|r|r|r} ")
-    print("    \\textbf{Name} & \\textbf{Type} & \\textbf{Unique \%} & \\textbf{Nulls \%} & \\textbf{Min} & \\textbf{Mean} & \\textbf{Max}\\\\")
+    print("    \\textbf{Name} & \\textbf{Type} & \\textbf{Unique Vals \%} & \\textbf{Nulls \%} & \\textbf{Min} & \\textbf{Mean} & \\textbf{Max}\\\\")
     print("      \\hline")
     for i in range(len(summary)):
         print("      ", summary.loc[i,"Name"], 
               "&", summary.loc[i,"Type"], 
-              "&", summary.loc[i,"Unique"], "%" 
+              "&", summary.loc[i,"Unique Vals"], "%" 
               "&", summary.loc[i,"Nulls"], "%" 
               "&", summary.loc[i,"Min"], 
               "&", summary.loc[i,"Mean"], 
@@ -386,6 +389,9 @@ def get_padded_number(n):
             return get_spaces(3 - after_decimal(n) + adjus) + str(n)+ " "
         if (abs(n)<10000000):
             return get_spaces(2 - after_decimal(n) + adjus) + str(n)+ " "
+        else:
+            number = "{:.2e}".format(n)
+            return get_spaces(2 + adjus) + number + " "
     else:
         return str(n) + " "
 
@@ -406,14 +412,15 @@ def print_markdown(s):
         name_spacer = 6
 
     print("| Name ", get_spaces(name_spacer-6), 
-        "| Type   | Unique  | Nulls   |  Min       |  Mean      |  Max       |", sep="")
+        "| Type   | Unique Vals | Nulls   |  Min       |  Mean      |  Max       |", sep="")
     print("| ---- ", get_spaces(name_spacer-6), 
-        "| ------ | ------- | ------- |  ---       |  ----      |  ---       |", sep="")
+        "| ------ | ----------- | ------- |  ---       |  ----      |  ---       |", sep="")
     for i in range(len(s)):
         print("| ", s.loc[i,"Name"], 
             get_spaces(name_spacer - len(s.loc[i,"Name"]) - 1 ), 
             "| ", s.loc[i,"Type"], get_type_spacer(s.loc[i,"Type"]),
-            "| ", get_percent_spacer(s.loc[i,"Unique"]), s.loc[i,"Unique"],"% ", 
+            #"| ", get_percent_spacer(s.loc[i,"Unique"]), s.loc[i,"Unique"],"% ", 
+            "|  ", get_padded_number(s.loc[i,"Unique Vals"]), 
             "| ", get_percent_spacer(s.loc[i,"Nulls"]), s.loc[i,"Nulls"],"% ", 
             "| ", get_padded_number(s.loc[i,"Min"]), 
             "| ", get_padded_number(s.loc[i,"Mean"]),
