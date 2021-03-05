@@ -33,10 +33,10 @@ setup(
     long_description = long_descr,
     long_description_content_type='text/markdown',
     author = "John Hawkins",
-    author_email = "hawkins.john.c@gmail.com",
+    author_email = "johnc@getting-data-science-done.com",
     url = "http://john-hawkins.github.io",
     project_urls = {
-        'Documentation': "http://john-hawkins.github.io",
+        'Documentation': "http://dfsummarizer.readthedocs.io",
         'Source': "https://github.com/john-hawkins/dfsummarizer",
         'Tracker': "https://github.com/john-hawkins/dfsummarizer/issues" 
       }
