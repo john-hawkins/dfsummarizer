@@ -21,13 +21,7 @@ Released and distributed via setuptools/PyPI/pip for Python 3.
  
 Additional detail available in the [companion blog post](https://john-hawkins.github.io/posts/2020/07/dfsummarizer-dataframe-summarizer-application/)
 
-Built using the 
-[bootstrap cmdline template](https://github.com/jgehrcke/python-cmdline-bootstrap)
- by [jgehrcke](https://github.com/jgehrcke)
-
-
 ## Notes
-
 
 Initial implementation can handle larger files by chunking data and iteratively
 building statistics. All statistics are robust except for estimation of the proportion
@@ -81,4 +75,12 @@ dfsummarizer markdown test.csv
 
 This will produce a markdown table summarizing the contents of the CSV
 file test.csv
+
+
+# Acknowledgements
+
+Python package built using the
+[bootstrap cmdline template](https://github.com/jgehrcke/python-cmdline-bootstrap)
+ by [jgehrcke](https://github.com/jgehrcke)
+
 
