@@ -426,7 +426,7 @@ def after_decimal(n):
 ########################################################################################
 def print_csv(s):
     output = StringIO()
-    s.to_csv(output)
+    s.to_csv(output, index=False)
     print(output.getvalue())
 
 ########################################################################################

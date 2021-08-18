@@ -26,8 +26,8 @@ def test_simple():
     assert rez["Name"][1] == "text"
     assert rez["Unique Vals"][0] == 3
     assert rez["Unique Vals"][1] == 3
+    assert rez["Type"][0] == "Int"
     assert rez["Min"][0] == 1
     assert rez["Mean"][0] == 2
     assert rez["Max"][0] == 3
-
 
