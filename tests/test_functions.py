@@ -20,7 +20,7 @@ def test_len_or_null():
     assert np.isnan(len_or_null(np.nan)) == True
 
 def test_simple():
-    df = pd.DataFrame({'ID':[1,2,3], "text":["First Text", "Test two. Multi sentence.","Third.\nMulti line"]})
+    df = pd.DataFrame({'ID':[1,2,3], "text":["First","2nd","Third"], "num":[10,13,10]})
     rez =  analyse_df(df)
     assert rez["Name"][0] == "ID"
     assert rez["Name"][1] == "text"
@@ -30,4 +30,9 @@ def test_simple():
     assert rez["Min"][0] == 1
     assert rez["Mean"][0] == 2
     assert rez["Max"][0] == 3
+    assert rez["Type"][2] == "Int"
+    assert rez["Min"][2] == 10
+    assert rez["Mean"][2] == 11
+    assert rez["Mode"][2] == 10
+    assert rez["Max"][2] == 13
 

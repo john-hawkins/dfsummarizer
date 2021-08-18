@@ -2,6 +2,7 @@
 from io import StringIO
 import pandas as pd 
 import numpy as np
+import operator
 import math
 import os
 
@@ -41,7 +42,7 @@ def analyse_df(df):
             uniques.remove(np.nan)
         unicount = len(uniques)
         unipercent = round(100*unicount/records,1)
- 
+        modes = df[name].mode(dropna=False) 
         #valtype = infer_type(str(type(df.loc[1,name])), unicount, uniques)
         valtype = infer_type_2( df.loc[:,name], 0, unicount, uniques)
 
@@ -68,6 +69,7 @@ def analyse_df(df):
         values_to_add = {
             'Name':name, 
             'Type':valtype,
+            'Mode':modes[0],
             'Unique Vals':unicount, 
             'Unique':unipercent, 
             'Nulls':napercent, 
@@ -102,10 +104,11 @@ def analyse_file_in_chunks(path_to_file):
 
 ########################################################################################
 def generate_final_summary(temp, total_chunks):
-    rez = pd.DataFrame(columns=('Name', 'Type', 'Unique Vals', 'Unique', 'Nulls', 'Min', 'Mean', 'Max'))
+    rez = pd.DataFrame(columns=('Name', 'Mode', 'Type', 'Unique Vals', 'Unique', 'Nulls', 'Min', 'Mean', 'Max'))
     for name in temp.keys():
         col = temp[name]
         total = col['nulls'] + col['nonnulls']
+        mode = max(col['val_counts'].items(), key=operator.itemgetter(1))[0]
         unicount = col['uniques'].estimate()
         if unicount > total:
             uniprop = 1.0
@@ -120,6 +123,7 @@ def generate_final_summary(temp, total_chunks):
             themean = col['mean'] 
         values_to_add = {
             'Name':name, 
+            'Mode':mode,
             'Type': col['type'],
             'Unique Vals':unicount,
             'Unique':unipercent,
@@ -132,6 +136,22 @@ def generate_final_summary(temp, total_chunks):
     return rez
 
 ########################################################################################
+def clean_dict(df, col):
+    temp = df[col].value_counts(dropna=False)
+    indeces = temp.index
+    newie = []
+    for i in indeces:
+        if np.isnan(i):
+            newie.append("NaN")
+        else:
+            newie.append(i)
+    temp.index = newie
+    return temp.to_dict()
+
+def combine_dicts(a, b, op=operator.add):
+    return {**a, **b, **{k: op(a[k], b[k]) for k in a.keys() & b}}
+
+########################################################################################
 def update_temp_summary(temp, df, startpoint):
     colnames = df.columns
     records = len(df)
@@ -140,13 +160,14 @@ def update_temp_summary(temp, df, startpoint):
         if name in temp:
             rez = temp[name]
         else: 
-            rez = { "type":[], "sum":0, "mean":np.nan, 
+            rez = { "type":[], "val_counts":{}, "sum":0, "mean":np.nan, 
                     "min":np.nan, "max":np.nan, 
                     "uniques":FMEstimator(), "nulls":0, 
                     "nonnulls":0
                    }
         nacount = len(df[df[name].isna()])
         nonnulls = len(df) - nacount
+        val_counts = clean_dict(df, name)
         uniques = df[name].unique().tolist()
         if np.nan in uniques :
             uniques.remove(np.nan)
@@ -189,6 +210,7 @@ def update_temp_summary(temp, df, startpoint):
             rez['max'] = themax
         rez['uniques'].update_all(uniques)
         #rez['uniques'] += uniprop
+        rez['val_counts'] = combine_dicts(rez['val_counts'], val_counts)
         rez['nonnulls'] = rez['nonnulls'] + nonnulls
         temp[name] = rez
     return temp
