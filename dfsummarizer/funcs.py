@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from io import StringIO
 import pandas as pd 
 import numpy as np
 import math
@@ -13,6 +13,13 @@ from .FlajoletMartin import FMEstimator
         analyse_df( pandas_dataframe): return a sumamry dataframe of the input dataframe
         analyse_df_in_chunks(path_to_dataset): Read the dataset in chunks and provide a summary
 """
+
+
+########################################################################################
+def analyse_file(path_to_file):
+    df = load_complete_dataframe(path_to_file)
+    summary = analyse_df(df)
+    return summary
 
 
 ########################################################################################
@@ -73,7 +80,7 @@ def analyse_df(df):
     return rez
 
 ########################################################################################
-def analyse_df_in_chunks(path_to_file):
+def analyse_file_in_chunks(path_to_file):
     """
         Given a path to a large dataset we will iteratively load it in chunks and build
         out the statistics necessary to summarise the whole dataset.
@@ -91,6 +98,7 @@ def analyse_df_in_chunks(path_to_file):
         temp = update_temp_summary(temp, chunk, startpoint)
     summary = generate_final_summary(temp, total_chunks)
     return summary
+
 
 ########################################################################################
 def generate_final_summary(temp, total_chunks):
@@ -211,6 +219,7 @@ def load_complete_dataframe(path_to_file):
 
     raise ValueError("Unsupported File Type")
 
+
 ########################################################################################
 def infer_type_2( thecolumn, startpoint, unicount, uniques):
     thetype = get_first_non_null_type(thecolumn, startpoint)
@@ -234,6 +243,7 @@ def get_first_non_null_type(thecolumn, startpoint):
             thetype = temptype
         index = index + 1 
     return thetype
+
 
 ########################################################################################
 def infer_type(thetype, unicount, uniques):
@@ -267,6 +277,7 @@ def infer_type(thetype, unicount, uniques):
                 valtype = "Bool"
      return valtype
 
+
 ########################################################################################
 def count_lines(path_to_file):
     """
@@ -275,6 +286,7 @@ def count_lines(path_to_file):
     count = 0
     for line in open(path_to_file): count += 1
     return count
+
 
 ########################################################################################
 def len_or_null(val):
@@ -287,9 +299,11 @@ def len_or_null(val):
     except:
         return np.nan
 
+
 ########################################################################################
 def isNaN(num):
     return num != num
+
 
 ########################################################################################
 def booleanize(x):
@@ -306,6 +320,7 @@ def booleanize(x):
         return 1
     else :
         return 0
+
 
 ########################################################################################
 def coerce_dates(df):
@@ -338,12 +353,14 @@ def print_latex(summary):
     print("  \\end{center}")
     print("\\end{table}")
 
+
 ########################################################################################
 def get_spaces(spacer):
     rez = ""
     for i in range(spacer):
         rez = rez + " "
     return rez
+
 
 ########################################################################################
 def get_type_spacer(t):
@@ -357,6 +374,7 @@ def get_type_spacer(t):
         return "  "
     return "   "
 
+
 ########################################################################################
 def get_percent_spacer(p):
     if (p==100.0):
@@ -365,6 +383,7 @@ def get_percent_spacer(p):
         return "  " 
     else: 
         return "   "
+
 
 ########################################################################################
 def get_padded_number(n):
@@ -395,6 +414,7 @@ def get_padded_number(n):
     else:
         return str(n) + " "
 
+
 ########################################################################################
 def after_decimal(n):
     arr = str(n).split(".")
@@ -402,6 +422,12 @@ def after_decimal(n):
         return len(arr[1])
     else:
         return -1
+
+########################################################################################
+def print_csv(s):
+    output = StringIO()
+    s.to_csv(output)
+    print(output.getvalue())
 
 ########################################################################################
 def print_markdown(s):
@@ -419,7 +445,6 @@ def print_markdown(s):
         print("| ", s.loc[i,"Name"], 
             get_spaces(name_spacer - len(s.loc[i,"Name"]) - 1 ), 
             "| ", s.loc[i,"Type"], get_type_spacer(s.loc[i,"Type"]),
-            #"| ", get_percent_spacer(s.loc[i,"Unique"]), s.loc[i,"Unique"],"% ", 
             "|  ", get_padded_number(s.loc[i,"Unique Vals"]), 
             "| ", get_percent_spacer(s.loc[i,"Nulls"]), s.loc[i,"Nulls"],"% ", 
             "| ", get_padded_number(s.loc[i,"Min"]), 
@@ -434,4 +459,5 @@ def round_down(n, decimals=0):
     """
     multiplier = 10 ** decimals
     return math.floor(n * multiplier) / multiplier
+
 

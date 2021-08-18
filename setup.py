@@ -7,7 +7,7 @@ from setuptools import setup
  
 version = re.search(
         '^__version__\s*=\s*"(.*)"',
-        open('dfsummarizer/dfsummarizer.py').read(),
+        open('dfsummarizer/__init__.py').read(),
         re.M
     ).group(1)
  

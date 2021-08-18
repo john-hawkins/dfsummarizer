@@ -1,7 +1,10 @@
+import pandas as pd
 import numpy as np
 from dfsummarizer.funcs import isNaN
 from dfsummarizer.funcs import len_or_null
 from dfsummarizer.funcs import extract_file_extension
+
+from dfsummarizer.funcs import analyse_df
 
 def test_extract_file_extension():
     assert extract_file_extension("./README.md") == ".md"
@@ -15,4 +18,16 @@ def test_isNaN():
 def test_len_or_null():
     assert len_or_null("the") == 3
     assert np.isnan(len_or_null(np.nan)) == True
+
+def test_simple():
+    df = pd.DataFrame({'ID':[1,2,3], "text":["First Text", "Test two. Multi sentence.","Third.\nMulti line"]})
+    rez =  analyse_df(df)
+    assert rez["Name"][0] == "ID"
+    assert rez["Name"][1] == "text"
+    assert rez["Unique Vals"][0] == 3
+    assert rez["Unique Vals"][1] == 3
+    assert rez["Min"][0] == 1
+    assert rez["Mean"][0] == 2
+    assert rez["Max"][0] == 3
+
 
