@@ -42,7 +42,11 @@ def analyse_df(df):
             uniques.remove(np.nan)
         unicount = len(uniques)
         unipercent = round(100*unicount/records,1)
-        modes = df[name].mode(dropna=False) 
+        mode = df[name].mode(dropna=False)[0]
+        #if (type(mode) == float) & np.isnan(mode):
+        #    mode = "NaN" 
+        if mode != mode:
+            mode = "NaN" 
         #valtype = infer_type(str(type(df.loc[1,name])), unicount, uniques)
         valtype = infer_type_2( df.loc[:,name], 0, unicount, uniques)
 
@@ -69,7 +73,7 @@ def analyse_df(df):
         values_to_add = {
             'Name':name, 
             'Type':valtype,
-            'Mode':modes[0],
+            'Mode':mode,
             'Unique Vals':unicount, 
             'Unique':unipercent, 
             'Nulls':napercent, 
@@ -360,14 +364,15 @@ def print_latex(summary):
     print(" \\begin{center}")
     print("   \\caption{Data Summary Table}")
     print("   \\label{tab:table1}")
-    print("   \\begin{tabular}{l|l|r|r|r|r} ")
-    print("    \\textbf{Name} & \\textbf{Type} & \\textbf{Unique Vals \%} & \\textbf{Nulls \%} & \\textbf{Min} & \\textbf{Mean} & \\textbf{Max}\\\\")
+    print("   \\begin{tabular}{l|l|r|r|r|r|r} ")
+    print("    \\textbf{Name} & \\textbf{Type} & \\textbf{Unique Vals \%} & \\textbf{Nulls \%} & \\textbf{Mode} & \\textbf{Min} & \\textbf{Mean} & \\textbf{Max}\\\\")
     print("      \\hline")
     for i in range(len(summary)):
         print("      ", summary.loc[i,"Name"], 
               "&", summary.loc[i,"Type"], 
               "&", summary.loc[i,"Unique Vals"], "%" 
               "&", summary.loc[i,"Nulls"], "%" 
+              "&", summary.loc[i,"Mode"], 
               "&", summary.loc[i,"Min"], 
               "&", summary.loc[i,"Mean"], 
               "&", summary.loc[i,"Max"], "\\\\")
@@ -452,6 +457,22 @@ def print_csv(s):
     print(output.getvalue())
 
 ########################################################################################
+def get_padded_val2(val, spacer):
+    filler = ""
+    if spacer > 10:
+        filler = (get_spaces(spacer - 10))
+    if type(val) == int:
+        return filler + get_padded_number(val) 
+    if type(val) == float:
+        return filler + get_padded_number(val) 
+    else:
+        printval = str(val)
+        return (get_spaces(spacer - len(printval)) + printval + " ")
+
+def get_padded_val(val):
+    return str(val) + " - " + str(type(val))
+
+########################################################################################
 def print_markdown(s):
     longest_name = max(s["Name"].apply(lambda x: len_or_null(x)))
     if(longest_name>4):
@@ -459,16 +480,25 @@ def print_markdown(s):
     else:
         name_spacer = 6
 
+    longest_mode = max(s["Mode"].apply(lambda x: len_or_null(str(x))))
+    if(longest_mode>10):
+        mode_spacer = longest_mode
+    else:
+        mode_spacer = 10
+
     print("| Name ", get_spaces(name_spacer-6), 
-        "| Type   | Unique Vals | Nulls   |  Min       |  Mean      |  Max       |", sep="")
+        "| Type   | Unique Vals | Nulls   | Mode ", get_spaces(mode_spacer-4),
+        "|  Min       |  Mean      |  Max       |", sep="")
     print("| ---- ", get_spaces(name_spacer-6), 
-        "| ------ | ----------- | ------- |  ---       |  ----      |  ---       |", sep="")
+        "| ------ | ----------- | ------- | ---- ", get_spaces(mode_spacer-4),
+        "|  ---       |  ----      |  ---       |", sep="")
     for i in range(len(s)):
         print("| ", s.loc[i,"Name"], 
             get_spaces(name_spacer - len(s.loc[i,"Name"]) - 1 ), 
             "| ", s.loc[i,"Type"], get_type_spacer(s.loc[i,"Type"]),
             "|  ", get_padded_number(s.loc[i,"Unique Vals"]), 
             "| ", get_percent_spacer(s.loc[i,"Nulls"]), s.loc[i,"Nulls"],"% ", 
+            "| ", get_padded_val2(s.loc[i,"Mode"], mode_spacer), 
             "| ", get_padded_number(s.loc[i,"Min"]), 
             "| ", get_padded_number(s.loc[i,"Mean"]),
             "| ", get_padded_number(s.loc[i,"Max"]), "|", sep="")

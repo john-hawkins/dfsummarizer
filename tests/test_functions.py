@@ -36,3 +36,10 @@ def test_simple():
     assert rez["Mode"][2] == 10
     assert rez["Max"][2] == 13
 
+def test_nan_mode():
+    df = pd.DataFrame({'ID':[1,2,3,4,5], "num":[3,np.nan,1,np.nan,np.nan]})
+    rez =  analyse_df(df)
+    #assert rez["Type"][1] == "Int"
+    assert rez["Mode"][1] == "NaN"
+    assert rez["Mean"][1] == 2.0
+
