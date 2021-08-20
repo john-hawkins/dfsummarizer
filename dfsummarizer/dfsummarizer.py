@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
- 
 """dfsummarizer.dfsummarizer: provides entry point main()."""
  
 import numpy as np
@@ -15,9 +14,22 @@ from .funcs import print_latex
 from .funcs import print_markdown
 from .funcs import print_csv
 from .config import max_filesize
+
+from dfsummarizer import __version__
  
 def main():
-    if len(sys.argv) < 2:
+    if len(sys.argv) == 2:
+        if sys.argv[1] == "-v":
+            print(" Version:", __version__)
+            exit(1)
+        elif sys.argv[1] == "-h":
+            print_usage(sys.argv)
+            exit(1)
+        else:
+            print("INVALID OPTION: ", sys.argv[1])
+            print_usage(sys.argv)
+            exit(1)
+    elif len(sys.argv) < 3:
         print("ERROR: MISSING ARGUMENTS")
         print_usage(sys.argv)
         exit(1)
@@ -46,10 +58,13 @@ def main():
 
 def print_usage(args):
     """ Command line application usage instrutions. """
-    print("USAGE ")
-    print(args[0], " <FORMAT> <PATH TO DATASET>")
-    print("  <FORMAT> - 'simple' or 'csv' or 'latex' or 'markdown'")
-    print("  <PATH TO DATASET> - Supported file types: csv, tsv, xls, xlsx, odf")
+    print(" USAGE ")
+    print(" ", args[0], " [OPTIONS] <FORMAT> <PATH TO DATASET>")
+    print("   <FORMAT>          - 'simple' or 'csv' or 'latex' or 'markdown'")
+    print("   <PATH TO DATASET> - Supported file types: csv, tsv, xls, xlsx, odf")
+    print("   [OPTIONS]")
+    print("      -v             - Print version")
+    print("      -h             - Print this usage help")
     print("")
 
 
